@@ -10,7 +10,7 @@
 void executeCommand(char **execCmd)
 {
     // This function will fork a new process to execute a command
-    if (strcmp(execCmd[0], "cd") == 0)
+    if (strcmp(execCmd[0], "cd") == 0) // if cd is there change dir first
     {
         chdir(execCmd[1]);
     }
@@ -23,7 +23,7 @@ void executeCommand(char **execCmd)
         }
         else if (pid == 0) // child process
         {
-            signal(SIGTSTP, SIG_DFL);
+            signal(SIGTSTP, SIG_DFL); //  singla handling
             signal(SIGINT, SIG_DFL);
             if (execvp(execCmd[0], execCmd) == -1)
             {
@@ -72,7 +72,7 @@ void executeCommandParallel(char **execCmd)
     {
         chdir(execCmd[1]);
     }
-    else
+    else // no wait for child process
     {
         int pid = fork();
         if (pid < 0)
@@ -100,7 +100,7 @@ void executeParallelCommands(size_t bufsize, char **tokens)
     {
         char **execCmd = malloc(bufsize * sizeof(char *));
         int j = 0;
-        while (tokens[i] != NULL && strcmp(tokens[i], "&&") != 0)
+        while (tokens[i] != NULL && strcmp(tokens[i], "&&") != 0) // remove &&
         {
             execCmd[j] = tokens[i];
             i++;
@@ -128,7 +128,7 @@ void executeSequentialCommands(size_t bufsize, char **tokens)
     {
         char **execCmd = malloc(bufsize * sizeof(char *));
         int j = 0;
-        while (tokens[i] != NULL && strcmp(tokens[i], "##") != 0)
+        while (tokens[i] != NULL && strcmp(tokens[i], "##") != 0) // remove ##
         {
             execCmd[j] = tokens[i];
             i++;
@@ -154,9 +154,9 @@ void executeSequentialCommands(size_t bufsize, char **tokens)
 void executeCommandRedirection(size_t bufsize, char **tokens)
 {
     char **execCmd = malloc(bufsize * sizeof(char *));
-    if (tokens[0] != NULL)
+    if (tokens[0] != NULL) 
     {
-        execCmd[0] = tokens[0];
+        execCmd[0] = tokens[0]; 
         execCmd[1] = NULL;
     }
     execCmd[2] = tokens[2];
@@ -168,7 +168,7 @@ char **parseInput(char *buffer, size_t bufsize)
     char **tokens = malloc(bufsize * sizeof(char *));
     char *token = strtok(buffer, " \n");
     int position = 0;
-    while (token != NULL)
+    while (token != NULL) // parse newline and spaces
     {
         tokens[position] = token;
         position++;
